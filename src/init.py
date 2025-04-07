@@ -1,0 +1,29 @@
+""" OpenSearch setup """
+from opensearch_client import OpenSearchClient
+import settings
+
+client = OpenSearchClient(host="localhost")
+
+# Update ML-related cluster settings
+# cluster_settings_filepath = (settings.OPENSEARCH_CONFIG_DIR / "cluster-settings.json").as_posix() 
+# cluster_settings = client._load_json_config(cluster_settings_filepath)
+# client._update_cluster_settings(cluster_settings)
+
+# # Register a model group
+# model_group_id = client.register_model_group("Model group", "NLP model group")
+
+# client.get_models()
+
+# Register a model to the model group
+# model_id = client.register_model(settings.MODEL_URL, "1.0.1", "Model group")
+
+# # Deploy the model
+# client.deploy_model(model_id)
+
+# # Create an ingest pipeline
+# client.create_ingest_pipeline("ingest-pipeline", "NLP ingest pipeline", model_id)
+
+# # Create KNN index
+# knn_index_settings_filepath = (settings.OPENSEARCH_CONFIG_DIR / "knn-index.json").as_posix()
+# knn_index_settings = client._load_json_config(knn_index_settings_filepath)
+# client.create_index("KNN index", knn_index_settings)
