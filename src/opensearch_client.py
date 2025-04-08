@@ -187,7 +187,11 @@ class OpenSearchClient:
             }
         }
         
-        return True
+        response = self._perform_request("POST", endpoint, body=body)
+        if response:
+            return len(response["hits"]["hits"]) > 0
+
+        return False
     
     def get_model_id(self, task_id: str):
         response = self.get_task(task_id)
