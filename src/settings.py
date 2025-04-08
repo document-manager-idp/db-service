@@ -1,8 +1,11 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # OpenSearch configuration
-ADMIN_PASSWD = os.environ['OPENSEARCH_INITIAL_ADMIN_PASSWORD']
+ADMIN_PASSWD = os.environ.get('OPENSEARCH_INITIAL_ADMIN_PASSWORD')
 INDEX_NAME = 'knn-index'
 MODEL_URL = "huggingface/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

@@ -49,7 +49,7 @@ class OpenSearchClient:
         
     def _update_cluster_settings(self, settings: json):
         self._logger.info(f"Update ML-related cluster settings")
-        endpoint = "_cluster/settings"
+        endpoint = "/_cluster/settings"
         return self._perform_request("PUT", endpoint, body=settings)
     
     def _load_json_config(self, filepath: str, **kwargs):
@@ -58,7 +58,7 @@ class OpenSearchClient:
         json_config = template.render(**kwargs)
         return json_config
 
-    def _wait_for_task_to_finish(self, task_id, timeout=300, wait_time=5):
+    def _wait_for_task_to_finish(self, task_id, timeout=60000, wait_time=5):
         """
         Waits for a task to complete, with retries.
         """
@@ -94,7 +94,7 @@ class OpenSearchClient:
         self._logger.info("Register model group")
         model_group_id = self.get_model_group_id(group_name)
         if model_group_id:
-            self._logger.info(f"Model group with name {group_name} already exists. Id: {model_group_id}")
+            self._logger.info(f'Model group with name "{group_name}" already exists. Id: {model_group_id}')
             return model_group_id
 
         endpoint = f"/_plugins/_ml/model_groups/_register"
@@ -144,6 +144,10 @@ class OpenSearchClient:
         Register model to the model group. Wait for task to finish. Return model_id.
         """
         self._logger.info(f"Register model, model_name={model_name}, group_name={group_name}")
+        if self.check_model_exists(model_name, group_name):
+            self._logger.info(f"Model already exists in model group {group_name}")
+            return
+
         group_id = self.get_model_group_id(group_name)
         if group_id:
             endpoint = "/_plugins/_ml/models/_register"
@@ -158,7 +162,32 @@ class OpenSearchClient:
             response = self._wait_for_task_to_finish(task_id=task_id)
             return response.get("model_id")
         self._logger(f"Model group {group_name} not found")
+
         return None
+
+    def check_model_exists(self, model_name: str, group_name: str) -> str:
+        model_group_id = self.get_model_group_id(group_name)
+        if not model_group_id:
+            self._logger.error(f'No model group with name "{group_name}" found.')
+            return False
+    
+        endpoint = "/_plugins/_ml/models/_search"
+        body = {
+            "query": {
+                "bool": {
+                "must": [
+                    {
+                    "match": { "name": model_name }
+                    },
+                    {
+                    "match": { "model_group_id": model_group_id }
+                    }
+                ]
+                }
+            }
+        }
+        
+        return True
     
     def get_model_id(self, task_id: str):
         response = self.get_task(task_id)
@@ -172,7 +201,10 @@ class OpenSearchClient:
             },
             "size": 1000
         }
-        return self._perform_request("POST", endpoint, body=body)
+        response = self._perform_request("POST", endpoint, body=body)
+        if response:
+            return response["hits"]["hits"]
+        return response
 
     def deploy_model(self, model_id: str):
         self._logger.info(f"Deploy model, model_id = {model_id}")
@@ -313,37 +345,3 @@ class OpenSearchClient:
         except Exception as e:
             self._logger.error(f"Error deleting document {filename}", exc_info=True)
             return None
-
-# client = OpenSearchClient()
-
-# ret = client.ingest_data_bulk([
-# {
-#     "_index": settings.INDEX_NAME,
-#     "_id": "1",
-#     "id": "1",
-#     "text": "Hello 1",
-#     "url": "",
-#     "type": "pdf",
-#     "filename": "test",
-#     "page_number": 1,
-#     "table_id": None,
-#     "table_text": None,
-# },
-# {
-#     "_index": settings.INDEX_NAME,
-#     "_id": "2",
-#     "id": "2",
-#     "text": "Hello 2",
-#     "url": "",
-#     "type": "pdf",
-#     "filename": "test",
-#     "page_number": 2,
-#     "table_id": None,
-#     "table_text": None,
-# }
-# ])
-
-# ret = client.delete_document(settings.INDEX_NAME, "test")
-
-# for obj in ret:
-#     print(obj)

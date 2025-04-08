@@ -4,10 +4,13 @@ if '..' not in sys.path:
     sys.path.append('..')
 import settings
 from opensearch_client import OpenSearchClient
+from utils import get_logger
 
 main = Blueprint('main', __name__)
 
 client = OpenSearchClient()
+
+logger = get_logger("routes")
 
 @main.route('/', methods=['GET'])
 def index():

@@ -13,6 +13,6 @@ def create_app(config_filename=None):
     
     # Import and register the main blueprint
     from app.routes import main as main_blueprint
-    app.register_blueprint(main_blueprint, url_prefix="/api")
+    app.register_blueprint(main_blueprint, url_prefix="/db-service")
     
     return app
