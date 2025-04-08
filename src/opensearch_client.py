@@ -144,9 +144,10 @@ class OpenSearchClient:
         Register model to the model group. Wait for task to finish. Return model_id.
         """
         self._logger.info(f"Register model, model_name={model_name}, group_name={group_name}")
-        if self.check_model_exists(model_name, group_name):
+        model_id = self.check_model_exists(model_name, group_name)
+        if model_id:
             self._logger.info(f"Model already exists in model group {group_name}")
-            return
+            return model_id
 
         group_id = self.get_model_group_id(group_name)
         if group_id:
@@ -189,7 +190,7 @@ class OpenSearchClient:
         
         response = self._perform_request("POST", endpoint, body=body)
         if response:
-            return len(response["hits"]["hits"]) > 0
+            return response["hits"]["hits"][0]["_id"]
 
         return False
     
