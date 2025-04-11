@@ -48,6 +48,8 @@ jobs:
           sed -i "s|db-service:.*|db-service:$IMAGE_TAG|g" db-service/deployment.yaml
 
       - name: Commit and push changes
+        env:
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "actions@github.com"
