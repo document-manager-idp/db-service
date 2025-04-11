@@ -19,5 +19,5 @@ model_id = client.register_model(settings.MODEL_URL, "1.0.1", "Model group")
 client.deploy_model(model_id)
 
 # Create an ingest pipeline
-client.create_ingest_pipeline("ingest-pipeline", "NLP ingest pipeline", model_id)
+client.create_ingest_pipeline(settings.PIPELINE_NAME, "NLP ingest pipeline", model_id)
 
