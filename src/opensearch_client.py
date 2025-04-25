@@ -404,6 +404,3 @@ class OpenSearchClient:
         except Exception as e:
             self._logger.error(f"Error deleting document {filename}", exc_info=True)
             return None
-
-client = OpenSearchClient()
-client.get_model
