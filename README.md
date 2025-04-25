@@ -93,10 +93,3 @@ All endpoints expect `Content‑Type: application/json`.
 * Logging goes to `logs/<module>.log`; enable stderr streaming via `get_logger(..., stderr=True)`.
 * Configuration files in **`opensearch-config/`** are Jinja2 templates and rendered at runtime.
 * To re‑initialise the ML ingest pipeline manually, run `python src/init.py` after the cluster is up.
-
----
-
-## License
-
-Distributed under the terms of your project’s license (add one if missing).
-```
