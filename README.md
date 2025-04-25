@@ -12,16 +12,18 @@ The service is fully containerised and includes a GitHub Actions workflow to pub
 
 ## Tech stack
 
-| Layer          | Technology                                       | Notes |
-|----------------|--------------------------------------------------|-------|
-| Language       | **Python 3.12**                                  | Alpine image |
-| Web API        | **Flask 3** + `flask-cors`                       | Blueprint mounted at `/db-service` |
-| Search backend | **OpenSearch** (2.x)                             | Ingest pipeline, k‑NN vector index |
-| ML             | HF model *paraphrase-multilingual-MiniLM‑L12‑v2* | Deployed via ML Commons |
-| Infrastructure | **Docker** / **GitHub Actions**                  | Multi‑arch build & push to GHCR |
-| Config / misc  | `python-dotenv`, `Jinja2`, `Werkzeug`            | Dynamic templates & logging |
+| Layer          | Technology                                       |
+|----------------|--------------------------------------------------|
+| Language       | **Python 3.12**                                  |
+| Web API        | **Flask 3** + `flask-cors`                       |
+| Search backend | **OpenSearch** (2.x)                             |
+| ML             | HuggingFace model *paraphrase-multilingual-MiniLM‑L12‑v2* |
+| Infrastructure | **Docker** / **GitHub Actions**                  |
+| Config / misc  | `python-dotenv`, `Jinja2`, `Werkzeug`            |
 
 ---
+
+
 
 ## Running the service
 
@@ -38,15 +40,15 @@ Create a `.env` file or export them from your shell.
 
 ---
 
+
 ### 2. Run locally (Python)
 
 ```bash
-git clone <repo>
-cd db-service                         # project root
+git clone git@github.com:document-manager-idp/db-service.git
 python -m venv env && source env/bin/activate
 pip install -r requirements.txt
-export $(grep -v '^#' .env | xargs)   # or set vars manually
-python src/run.py                     # starts on http://localhost:5700
+# start app on http://localhost:5700
+python src/run.py
 ```
 
 ---
@@ -57,11 +59,8 @@ python src/run.py                     # starts on http://localhost:5700
 # Build the image
 docker build -t db-service .
 
-# Start the container (pass env vars or --env-file .env)
-docker run --rm -p 5700:5700 \
-  -e OPENSEARCH_ADDRESS=https://opensearch.local:9200 \
-  -e OPENSEARCH_INITIAL_ADMIN_PASSWORD=admin \
-  db-service
+# Start container
+docker run --rm -p 5700:5700 db-service
 ```
 
 The container’s default command is `python3 src/run.py`.
@@ -91,5 +90,4 @@ All endpoints expect `Content‑Type: application/json`.
 ## Development tips
 
 * Logging goes to `logs/<module>.log`; enable stderr streaming via `get_logger(..., stderr=True)`.
-* Configuration files in **`opensearch-config/`** are Jinja2 templates and rendered at runtime.
 * To re‑initialise the ML ingest pipeline manually, run `python src/init.py` after the cluster is up.
