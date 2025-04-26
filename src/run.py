@@ -1,5 +1,8 @@
 from app import create_app
 import os
+from init import setup_opensearch
+
+setup_opensearch()
 
 app = create_app()
 
