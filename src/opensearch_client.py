@@ -350,10 +350,13 @@ class OpenSearchClient:
             explain=True
         )
         if response:
+            self._logger.info(f"Documents retrieved from index {index_name}")
+            self._logger.info(json.dumps(response, indent=4, ensure_ascii=False))
             docs = response["hits"]["hits"]
             doc_names = sorted(list(set([doc["_source"]["filename"] for doc in docs])))
             return doc_names
 
+        self._logger.info(f"Error retrieving documents from index {index_name}")
         return None
 
     def delete_index(self, index_name: str):
