@@ -195,7 +195,7 @@ class OpenSearchClient:
             response = self._wait_for_task_to_finish(task_id=task_id)
             settings.MODEL_ID = response.get("model_id")
             return response.get("model_id")
-        self._logger(f"Model group {group_name} not found")
+        self._logger.error(f"Model group {group_name} not found")
 
         return None
     
