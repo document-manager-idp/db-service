@@ -8,7 +8,8 @@ def get_logger(
     log_dir=None,
     level=logging.INFO,
     format=f"%(asctime)s %(levelname)s: %(message)s",
-    stderr=False
+    stderr=False,
+    stdout=False,
 ) -> logging.Logger:
     log_dir = log_dir or settings.LOGS_DIR
     os.makedirs(log_dir, exist_ok=True)
@@ -24,6 +25,11 @@ def get_logger(
 
         if stderr:
             streamHandler = logging.StreamHandler(sys.stderr)
+            streamHandler.setFormatter(logging.Formatter(format))
+            logger.addHandler(streamHandler)
+
+        if stdout:
+            streamHandler = logging.StreamHandler(sys.stdout)
             streamHandler.setFormatter(logging.Formatter(format))
             logger.addHandler(streamHandler)
 

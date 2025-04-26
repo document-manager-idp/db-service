@@ -11,7 +11,7 @@ class OpenSearchClient:
     def __init__(self, host: str = settings.OPENSEARCH_ADDRESS, port: int = 9200, logger: Logger = None) -> None:
         self.host = host
         self.port = port
-        self._logger = logger or get_logger("opensearch-client")
+        self._logger = logger or get_logger("opensearch-client", stdout=True)
         self.client: OpenSearch = self._connect_to_opensearch()
 
     def _connect_to_opensearch(self) -> None:
