@@ -223,7 +223,7 @@ class OpenSearchClient:
         }
         
         response = self._perform_request("POST", endpoint, body=body, verbose=verbose)
-        if response:
+        if response and response["hits"]["hits"]:
             return response["hits"]["hits"][0]
         return None
 
