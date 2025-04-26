@@ -195,8 +195,8 @@ class OpenSearchClient:
             task_id = response["task_id"]
             response = self._wait_for_task_to_finish(task_id=task_id)
             self._logger.info(f"Response:\n{json.dumps(response, indent=4, ensure_ascii=False)}")
-            settings.MODEL_ID = response.get("model_id")
-            return response.get("model_id")
+            settings.MODEL_ID = response["hits"]["hits"][0]["_id"]
+            return settings.MODEL_ID
         self._logger.error(f"Model group {group_name} not found")
 
         return None
