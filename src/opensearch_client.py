@@ -19,6 +19,7 @@ class OpenSearchClient:
             return self.client
         try:
             # Create the client with SSL/TLS and hostname verification disabled.
+            self._logger.info(f"Connecting to OpenSearch at {self.host}:{self.port}")
             client = OpenSearch(
                 hosts = [{'host': self.host, 'port': self.port}],
                 http_compress = True, # enables gzip compression for request bodies
@@ -28,9 +29,9 @@ class OpenSearchClient:
                 ssl_assert_hostname = False,
                 ssl_show_warn = False,
             )
-            self._logger.info(f"Connected to OpenSearch")
             if client:
                 self._logger.info(json.dumps(client.info(), indent=4))
+            self._logger.info(f"Connected to OpenSearch")
             return client
         except Exception as e:
             self._logger.error(f"Could not connect to Opensearch: {e}")
