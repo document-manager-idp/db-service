@@ -64,6 +64,9 @@ def search():
 @main.route('/get-documents', methods=['GET'])
 @require_request_params('id')
 def get_documents():
+    if not client.index_exists(index_name=id):
+        return jsonify({"documents": []}), 200
+
     data = request.get_json()
     id = data.get('id')
 
