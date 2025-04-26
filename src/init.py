@@ -3,7 +3,7 @@ from opensearch_client import OpenSearchClient
 import settings
 
 def setup_opensearch():
-    client = OpenSearchClient(host="localhost")
+    client = OpenSearchClient()
 
     # Update ML-related cluster settings
     cluster_settings_filepath = (settings.OPENSEARCH_CONFIG_DIR / "cluster-settings.json").as_posix()
