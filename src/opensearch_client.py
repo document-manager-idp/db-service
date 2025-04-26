@@ -177,10 +177,12 @@ class OpenSearchClient:
         Register model to the model group. Wait for task to finish. Return model_id.
         """
         self._logger.info(f"Register model, model_name={model_name}, group_name={group_name}")
-        if self.get_model(model_name, group_name):
+        model = self.get_model(model_name, group_name)
+        if model:
             self._logger.info(f"Model already exists in model group {group_name}")
             self._wait_for_model_to_register(model_name, group_name)
-            return
+            settings.MODEL_ID = model["_id"]
+            return settings.MODEL_ID
 
         group_id = self.get_model_group_id(group_name)
         if group_id:
