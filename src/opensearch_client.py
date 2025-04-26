@@ -159,7 +159,7 @@ class OpenSearchClient:
             }
         }
         response = self._perform_request("GET", endpoint, body=body, verbose=verbose)
-        if response["hits"]["hits"]:
+        if response and response["hits"]["hits"]:
             return response["hits"]["hits"][0]["_id"]
         return None
 
