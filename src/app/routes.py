@@ -10,7 +10,7 @@ main = Blueprint('main', __name__)
 
 client = OpenSearchClient()
 
-logger = get_logger("routes")
+logger = get_logger("routes", stdout=True)
 
 @main.route('/', methods=['GET'])
 def index():
@@ -74,5 +74,8 @@ def get_documents():
     response = client.get_documents_from_index(index_name=id)
     if not response:
         return jsonify({'error': f"Error occured while getting documents from index {id}"}), 400
+    
+    logger.info("Documents fetched:")
+    logger.info(response, indent=4)
 
     return jsonify({"documents": response})
