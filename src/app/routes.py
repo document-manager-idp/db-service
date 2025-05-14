@@ -27,7 +27,7 @@ def upload():
         client.create_index(index_name=id)
 
     logger.info("Content to be uploaded:")
-    logger.info(content, indent=4)
+    logger.info(content)
 
     # format data for ingestion
     data = [
