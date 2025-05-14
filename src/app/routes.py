@@ -26,11 +26,17 @@ def upload():
     if not client.index_exists(index_name=id):
         client.create_index(index_name=id)
 
+    logger.info("Content to be uploaded:")
+    logger.info(content, indent=4)
+
     # format data for ingestion
     data = [
         {"_index": id, "_id": chunk["id"]} | chunk
         for chunk in content
     ]
+
+    logger.info("Data to be uploaded:")
+    logger.info(data, indent=4)
 
     response = client.ingest_data_bulk(data)
     if not response:
