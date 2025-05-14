@@ -36,7 +36,7 @@ def upload():
     ]
 
     logger.info("Data to be uploaded:")
-    logger.info(data, indent=4)
+    logger.info(data)
 
     response = client.ingest_data_bulk(data)
     if not response:
@@ -83,11 +83,11 @@ def get_documents():
         client.create_index(index_name=id)
         return jsonify({"documents": []}), 200
 
-    response = client.get_documents_from_index(index_name=id)
-    if not response:
+    response, code = client.get_documents_from_index(index_name=id)
+    if code != 200:
         return jsonify({'error': f"Error occured while getting documents from index {id}"}), 400
     
     logger.info("Documents fetched:")
-    logger.info(response, indent=4)
+    logger.info(response)
 
     return jsonify({"documents": response})
