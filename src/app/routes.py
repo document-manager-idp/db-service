@@ -26,7 +26,13 @@ def upload():
     if not client.index_exists(index_name=id):
         client.create_index(index_name=id)
 
-    response = client.ingest_data_bulk(content)
+    # format data for ingestion
+    data = [
+        {"_index": id, "_id": chunk["id"]} | chunk
+        for chunk in content
+    ]
+
+    response = client.ingest_data_bulk(data)
     if not response:
         return jsonify({'error': "Failed to upload data"}), 400
 
