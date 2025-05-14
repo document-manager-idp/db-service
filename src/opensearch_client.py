@@ -100,7 +100,7 @@ class OpenSearchClient:
                 # self._logger.info(json.dumps(response, indent=4))
                 task_status = response['_source'].get('model_state')
                 
-                if task_status == 'REGISTERED':
+                if task_status == 'REGISTERED' or task_status == 'DEPLOYED':
                     self._logger.info(f"Model registered successfully.")
                     return response
                 else:
