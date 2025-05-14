@@ -181,6 +181,7 @@ class OpenSearchClient:
         if model:
             self._logger.info(f"Model already exists in model group {group_name}")
             self._wait_for_model_to_register(model_name, group_name)
+            self._logger.info(f"Model id: {model['_id']}")
             settings.MODEL_ID = model["_id"]
             return settings.MODEL_ID
 
