@@ -10,6 +10,7 @@ INDEX_NAME = 'knn-index'
 PIPELINE_NAME = "ingest-pipeline"
 MODEL_URL = "huggingface/sentence-transformers/multi-qa-MiniLM-L6-cos-v1"
 MODEL_NAME = "sentence-transformers/multi-qa-MiniLM-L6-cos-v1"
+MODEL_GROUP_NAME = "Model group"
 MODEL_GROUP_ID = None
 MODEL_ID = None
 OPENSEARCH_ADDRESS=os.environ.get('OPENSEARCH_ADDRESS')

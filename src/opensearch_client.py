@@ -305,7 +305,11 @@ class OpenSearchClient:
 
     def semantic_search(self, index_name: str, query_text: str, k: int = 3, model_id: str | None = None):
         self._logger.info(f"Semantic search, query_text = {query_text}")
-        model_id = model_id or MODEL_ID
+        model = self.get_model(settings.MODEL_URL, settings.MODEL_GROUP_NAME)
+        if not model:
+            self._logger.error(f"Model {settings.MODEL_URL} not found in model group {settings.MODEL_GROUP_NAME}")
+            return None
+        model_id = model["_id"] if not model_id else model_id
         self._logger.info(f"Model id = {model_id}")
         query = {
             "size": k,
