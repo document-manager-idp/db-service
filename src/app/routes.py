@@ -4,6 +4,7 @@ if '..' not in sys.path:
     sys.path.append('..')
 from opensearch_client import OpenSearchClient
 from utils import get_logger
+from app import metrics
 from app.decorators import require_request_params
 
 main = Blueprint('main', __name__)
@@ -42,6 +43,11 @@ def upload():
     if not response:
         return jsonify({'error': "Failed to upload data"}), 400
 
+    # business metric
+    metrics.PDF_UPLOAD_TOTAL.labels(
+        status="success" if response else "error"
+    ).inc()
+
     return jsonify({'status': 'Data uploaded successfully'}), 200 
 
 @main.route('/delete', methods=['DELETE'])
@@ -58,6 +64,10 @@ def delete():
     if not response:
         return jsonify({'error': "Failed to delete document"}), 400
 
+    metrics.PDF_DELETE_TOTAL.labels(
+        status="success" if response else "error"
+    ).inc()
+
     return jsonify({'status': 'Document deleted successfully'}), 200
 
 @main.route('/search', methods=['GET'])
@@ -70,6 +80,10 @@ def search():
     response = client.semantic_search(id, query)
     if not response:
         return jsonify({'error': "Error occured while performing semantic search"}), 400
+
+    metrics.SEARCH_TOTAL.labels(
+        status="success" if response else "error"
+    ).inc()
 
     return jsonify(response), 200
 
