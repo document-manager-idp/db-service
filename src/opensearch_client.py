@@ -357,7 +357,7 @@ class OpenSearchClient:
             _source_includes=["filename"],
             explain=True
         )
-        if response and response["hits"]["hits"]:
+        if response:
             self._logger.info(f"Documents retrieved from index {index_name}")
             self._logger.info(json.dumps(response, indent=4, ensure_ascii=False))
             docs = response["hits"]["hits"]
