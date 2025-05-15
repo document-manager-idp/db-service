@@ -381,6 +381,8 @@ class OpenSearchClient:
 
     def ingest_data_bulk(self, data):
         self._logger.info("Ingest data bulk")
+        self._logger.info(f"Data to be uploaded:")
+        self._logger.info(json.dumps(data, indent=4, ensure_ascii=False))
         try:
             ret = helpers.parallel_bulk(
                 self.client, 
