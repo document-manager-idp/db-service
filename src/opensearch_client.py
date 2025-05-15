@@ -7,6 +7,8 @@ from opensearchpy.exceptions import TransportError
 from jinja2 import Template
 import time
 
+MODEL_ID = None
+
 class OpenSearchClient:
     def __init__(self, host: str = settings.OPENSEARCH_ADDRESS, port: int = 9200, logger: Logger = None) -> None:
         self.host = host
@@ -185,8 +187,8 @@ class OpenSearchClient:
             self._logger.info(f"Model already exists in model group {group_name}")
             self._wait_for_model_to_register(model_name, group_name)
             self._logger.info(f"Model id: {model['_id']}")
-            settings.MODEL_ID = model["_id"]
-            return settings.MODEL_ID
+            MODEL_ID = model["_id"]
+            return MODEL_ID
 
         group_id = self.get_model_group_id(group_name)
         if group_id:
@@ -202,8 +204,8 @@ class OpenSearchClient:
             response = self._wait_for_task_to_finish(task_id=task_id)
             self._logger.info(f"Response:\n{json.dumps(response, indent=4, ensure_ascii=False)}")
             self._logger.info(f"model_id={response["model_id"]}")
-            settings.MODEL_ID = response["model_id"]
-            return settings.MODEL_ID
+            MODEL_ID = response["model_id"]
+            return MODEL_ID
         self._logger.error(f"Model group {group_name} not found")
 
         return None
@@ -301,8 +303,9 @@ class OpenSearchClient:
             explain=True,
         )
 
-    def semantic_search(self, index_name: str, query_text: str, k: int = 3, model_id: str = settings.MODEL_ID):
+    def semantic_search(self, index_name: str, query_text: str, k: int = 3, model_id: str | None = None):
         self._logger.info(f"Semantic search, query_text = {query_text}")
+        model_id = model_id or MODEL_ID
         self._logger.info(f"Model id = {model_id}")
         query = {
             "size": k,
