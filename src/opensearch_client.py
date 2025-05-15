@@ -303,6 +303,7 @@ class OpenSearchClient:
 
     def semantic_search(self, index_name: str, query_text: str, k: int = 3, model_id: str = settings.MODEL_ID):
         self._logger.info(f"Semantic search, query_text = {query_text}")
+        self._logger.info(f"Model id = {model_id}")
         query = {
             "size": k,
             "query": {
