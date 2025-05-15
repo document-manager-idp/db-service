@@ -394,7 +394,7 @@ class OpenSearchClient:
                 request_timeout=60
             )
             self._logger.info("Successfully performed parallel bulk ingestion")
-            self._logger.info(f"Response:\n{json.dumps(ret, indent=4, ensure_ascii=False)}")
+            self._logger.info(f"Response:\n{list(ret)}")
             return ret
         except Exception as e:
             self._logger.error("Error during parallel bulk ingestion", exc_info=True)
