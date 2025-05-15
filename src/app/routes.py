@@ -50,7 +50,7 @@ def upload():
 
     return jsonify({'status': 'Data uploaded successfully'}), 200 
 
-@main.route('/delete', methods=['DELETE'])
+@main.route('/delete', methods=['GET'])
 @require_request_params('id', 'filename')
 def delete():
     data = request.get_json()

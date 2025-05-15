@@ -15,6 +15,7 @@ def setup_opensearch():
 
     # Register a model to the model group
     model_id = client.register_model(settings.MODEL_URL, "1.0.1", "Model group")
+    settings.MODEL_ID = model_id
 
     # # Deploy the model
     client.deploy_model(model_id)
